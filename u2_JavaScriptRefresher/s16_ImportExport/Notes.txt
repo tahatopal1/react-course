@@ -1,0 +1,113 @@
+### Summary: Import and Export Syntax in JavaScript
+
+#### **Key Concepts**
+- **Why Use Import/Export**: 
+  - Helps split code across multiple files, keeping it modular and maintainable.
+  - A crucial practice in React and modern JavaScript projects.
+
+---
+
+#### **Named Exports**
+1. **Syntax**:
+   ```javascript
+   // util.js
+   export const apiKey = "123456";
+   export const abc = "Another Value";
+   ```
+
+2. **Importing Named Exports**:
+   ```javascript
+   // app.js
+   import { apiKey, abc } from './util.js';
+   console.log(apiKey, abc);
+   ```
+
+3. **Renaming During Import**:
+   - Use `as` to assign an alias:
+     ```javascript
+     import { abc as content } from './util.js';
+     console.log(content);
+     ```
+
+4. **Import All as an Object**:
+   - Group all exports into a single object:
+     ```javascript
+     import * as util from './util.js';
+     console.log(util.apiKey, util.abc);
+     ```
+
+---
+
+#### **Default Exports**
+1. **Syntax**:
+   - Only **one default export** is allowed per file.
+   ```javascript
+   // util.js
+   const defaultExport = "Default Export";
+   export default defaultExport;
+   ```
+
+2. **Importing Default Exports**:
+   - No curly braces; assign any name during import:
+     ```javascript
+     // app.js
+     import defaultValue from './util.js';
+     console.log(defaultValue);
+     ```
+
+---
+
+#### **Combining Named and Default Exports**
+1. **Syntax**:
+   ```javascript
+   // util.js
+   export const apiKey = "123456";
+   export default "Default Export";
+   ```
+
+2. **Importing Both**:
+   - Default export comes first, followed by named exports:
+     ```javascript
+     // app.js
+     import defaultValue, { apiKey } from './util.js';
+     console.log(defaultValue, apiKey);
+     ```
+
+---
+
+#### **Wildcard Imports with Default Exports**
+- Combine default and named exports into a single object:
+  ```javascript
+  import * as util from './util.js';
+  console.log(util.default, util.apiKey);
+  ```
+
+---
+
+#### **Key Notes**
+1. **Module Syntax**:
+   - Requires the `type="module"` attribute in a `<script>` tag for vanilla JavaScript:
+     ```html
+     <script type="module" src="app.js"></script>
+     ```
+   - React projects automatically handle this with a build process.
+
+2. **Default vs Named Exports**:
+   - Use **default exports** when there’s only one primary value in a file.
+   - Use **named exports** for multiple related values.
+
+3. **Alias Usage**:
+   - Rename imports for clarity using `as`.
+   - Example:
+     ```javascript
+     import { apiKey as key } from './util.js';
+     console.log(key);
+     ```
+
+4. **Build Process in React**:
+   - In React, a build process combines multiple files into optimized bundles.
+   - Script tags and file extensions are handled automatically.
+
+---
+
+This foundational understanding of JavaScript modules is essential for React development, where imports and exports are extensively used for components, utilities, and configurations.

@@ -1,0 +1,132 @@
+### **Functions Inside Functions**
+
+In JavaScript, you can define functions inside other functions. This concept is often referred to as **nested functions** or **closures**. While it may not always be common in plain JavaScript, it becomes essential in libraries and frameworks like React.
+
+---
+
+### **Key Characteristics**
+
+1. **Scoped to the Outer Function**:
+   - Functions defined inside another function are **scoped** to the enclosing function.
+   - They can only be called or accessed from within that enclosing function.
+
+2. **Access to Parent Scope**:
+   - Inner functions have access to variables and constants declared in their parent function.
+
+3. **Encapsulation**:
+   - Nested functions allow you to encapsulate functionality and avoid polluting the global or outer function scope.
+
+---
+
+### **Example: Nested Functions**
+
+```javascript
+function init() {
+    const message = "Hi";
+
+    // Nested function
+    function greet() {
+        console.log(message); // Accessing parent scope
+    }
+
+    greet(); // Call the nested function
+}
+
+// Call the outer function
+init();
+
+// greet(); // Error: greet is not defined (scoped to init)
+```
+
+#### **Explanation**:
+- The `greet` function is defined inside `init`, so it is only accessible within `init`.
+- The `message` constant, declared in `init`, is accessible in `greet` due to **lexical scoping**.
+- Calling `greet` outside of `init` results in an error since it is not defined in the outer scope.
+
+---
+
+### **Use Cases**
+
+1. **Encapsulation**:
+   - Keep helper functions private to the outer function.
+   - Avoid polluting the outer or global scope.
+
+2. **React Components**:
+   - In React, nested functions are often used within components to encapsulate logic (e.g., event handlers, utility functions).
+
+3. **Closures**:
+   - Create functions that "remember" their parent scope for dynamic behaviors.
+
+---
+
+### **Example: Closure**
+
+```javascript
+function createCounter() {
+    let count = 0;
+
+    // Nested function
+    function increment() {
+        count++;
+        console.log(count);
+    }
+
+    return increment;
+}
+
+const counter = createCounter(); // Outer function returns the nested function
+counter(); // 1
+counter(); // 2
+counter(); // 3
+```
+
+#### **Explanation**:
+- The `increment` function remembers the `count` variable from its parent scope (`createCounter`), even after `createCounter` has finished executing.
+- This behavior is known as a **closure**.
+
+---
+
+### **Why It Matters in React**
+
+In React, nested functions are commonly used for:
+1. **Event Handlers**:
+   - Define event handling logic within a component.
+
+2. **Utility Functions**:
+   - Create helper functions scoped to the component.
+
+3. **Functional Components**:
+   - Encapsulate reusable logic and state updates.
+
+---
+
+### **Example: Nested Functions in React**
+
+```javascript
+function App() {
+    function handleClick() {
+        function logMessage() {
+            console.log("Button clicked!");
+        }
+
+        logMessage(); // Call the nested function
+    }
+
+    return <button onClick={handleClick}>Click Me</button>;
+}
+```
+
+#### **Explanation**:
+- `logMessage` is scoped to `handleClick` and encapsulates logging logic.
+- React encourages defining such scoped functions to keep the component's code organized.
+
+---
+
+### **Conclusion**
+
+Nested functions allow you to:
+- Encapsulate logic within a specific scope.
+- Access variables and constants from the parent scope.
+- Avoid cluttering the global or outer function scope.
+
+Understanding nested functions and their behavior is crucial for mastering modern JavaScript and frameworks like React.

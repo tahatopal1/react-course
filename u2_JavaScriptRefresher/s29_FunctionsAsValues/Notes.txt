@@ -1,0 +1,164 @@
+### **Passing Functions as Values in JavaScript**
+
+Passing functions as values is a powerful JavaScript feature that enables dynamic and reusable programming patterns. This technique is central to many frameworks, including React, where functions like event handlers are passed as props.
+
+---
+
+### **1. Functions as First-Class Citizens**
+
+In JavaScript:
+- Functions can be treated as values.
+- You can assign them to variables or constants.
+- You can pass them as arguments to other functions.
+- You can return them from functions.
+
+---
+
+### **2. Passing Functions to Built-In Functions**
+
+#### **Using `setTimeout`**
+The `setTimeout` function accepts another function as its first argument and a delay in milliseconds as the second argument.
+
+```javascript
+// Define a function
+function handleTimeout() {
+  console.log("Timed out");
+}
+
+// Pass the function as an argument
+setTimeout(handleTimeout, 2000); // Executes after 2 seconds
+
+// Using an anonymous arrow function
+setTimeout(() => {
+  console.log("Anonymous Timed out");
+}, 2000);
+```
+
+#### **Important Note:**
+- **Omitting Parentheses:** When passing a function, avoid using parentheses (`handleTimeout`) unless you intend to call the function immediately.
+  - `setTimeout(handleTimeout, 2000)` passes the function.
+  - `setTimeout(handleTimeout(), 2000)` executes the function immediately and passes its return value, which is likely incorrect.
+
+---
+
+### **3. Passing Functions to Custom Functions**
+
+#### **Custom Function Example**
+You can define your own functions that accept other functions as arguments.
+
+```javascript
+// Define a function that accepts another function
+function greeter(greetFn) {
+  greetFn(); // Execute the passed function
+}
+
+// Pass an anonymous arrow function
+greeter(() => {
+  console.log("Hi there!");
+});
+
+// Pass a pre-defined function
+function sayHello() {
+  console.log("Hello!");
+}
+greeter(sayHello);
+```
+
+#### **Explanation:**
+- The `greeter` function takes a parameter (`greetFn`), which is expected to be a function.
+- It executes the passed function using `greetFn()`.
+
+---
+
+### **4. Inline vs Pre-Defined Functions**
+
+- **Inline Functions:** Defined directly where needed, usually as anonymous arrow functions.
+- **Pre-Defined Functions:** Declared elsewhere and passed by name.
+
+**Example:**
+```javascript
+// Pre-defined function
+function greet() {
+  console.log("Pre-defined greeting!");
+}
+greeter(greet);
+
+// Inline function
+greeter(() => {
+  console.log("Inline greeting!");
+});
+```
+
+Both achieve the same result, but inline functions are often more concise.
+
+---
+
+### **5. Key Concepts When Passing Functions**
+
+#### **Anonymous Functions**
+Functions without a name:
+```javascript
+greeter(function () {
+  console.log("Anonymous function!");
+});
+```
+
+#### **Arrow Functions**
+Shorter syntax for anonymous functions:
+```javascript
+greeter(() => console.log("Arrow function!"));
+```
+
+#### **Named Functions**
+Reusable, named functions passed by reference:
+```javascript
+function namedGreeting() {
+  console.log("Named function!");
+}
+greeter(namedGreeting);
+```
+
+#### **Executing Functions**
+- **Pass Function:** `greeter(greetFn)` passes the function.
+- **Execute Function:** `greeter(greetFn())` executes and passes the result (not the function itself).
+
+---
+
+### **6. Practical Use Cases**
+
+#### **Event Handlers**
+```javascript
+const button = document.querySelector("button");
+button.addEventListener("click", () => {
+  console.log("Button clicked!");
+});
+```
+
+#### **Array Methods**
+Array methods like `map` and `filter` accept functions as arguments.
+```javascript
+const numbers = [1, 2, 3];
+const doubled = numbers.map(num => num * 2);
+console.log(doubled); // [2, 4, 6]
+```
+
+#### **Higher-Order Functions**
+Functions that operate on other functions.
+```javascript
+function higherOrder(fn) {
+  console.log("About to call the function:");
+  fn();
+}
+
+higherOrder(() => console.log("Function called!"));
+```
+
+---
+
+### **7. Summary**
+
+- Functions in JavaScript are "first-class citizens."
+- You can pass functions as arguments, return them, and store them in variables.
+- Use this feature to create dynamic, reusable, and expressive code patterns.
+
+Understanding this concept is critical as it forms the foundation for advanced JavaScript patterns and frameworks like React.
