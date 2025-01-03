@@ -1,0 +1,61 @@
+JSX is widely used in React projects because it simplifies and improves readability when working with UI components. However, it's crucial to understand the alternative approach using `React.createElement` to appreciate the underlying mechanism of JSX and its role in React development.
+
+### Key Points About JSX and Non-JSX Approaches:
+
+#### **What JSX Does**
+- JSX is a syntax extension that allows you to write HTML-like code directly in your JavaScript files.
+- This code is transpiled into `React.createElement` calls during the build process.
+- For example:
+  ```jsx
+  const element = <h1>Hello, World!</h1>;
+  ```
+  Translates to:
+  ```javascript
+  const element = React.createElement('h1', null, 'Hello, World!');
+  ```
+
+#### **Using `React.createElement` Directly**
+- Without JSX, you can use `React.createElement` to create React elements programmatically.
+- Syntax:
+  ```javascript
+  React.createElement(type, props, ...children)
+  ```
+  - **`type`**: The type of element (e.g., `'div'`, `'h1'`, or a custom component).
+  - **`props`**: An object containing attributes or properties for the element.
+  - **`children`**: Any nested elements or content.
+
+#### **Example of JSX vs. Non-JSX**
+1. **With JSX**:
+   ```jsx
+   const App = () => (
+     <div>
+       <h1>Hello, JSX!</h1>
+       <p>This is JSX code.</p>
+     </div>
+   );
+   ```
+
+2. **Without JSX**:
+   ```javascript
+   const App = () =>
+     React.createElement(
+       'div',
+       null,
+       React.createElement('h1', null, 'Hello, JSX!'),
+       React.createElement('p', null, 'This is JSX code.')
+     );
+   ```
+
+#### **Why JSX is Preferred**
+1. **Readability**: JSX closely resembles HTML, making it intuitive for developers familiar with web development.
+2. **Maintainability**: Complex UI structures are easier to manage with JSX compared to deeply nested `React.createElement` calls.
+3. **Tooling Support**: JSX provides better syntax highlighting and error detection in modern IDEs.
+
+#### **When to Avoid JSX**
+- Projects without a build process (e.g., those not using tools like Babel or Webpack).
+- Minimal or experimental setups where simplicity is key.
+
+#### **Best Practice**
+For nearly all real-world React projects, **use JSX** along with a build process. Modern tools like Create React App, Vite, and Next.js handle the setup seamlessly, so you can focus on development rather than managing builds.
+
+Understanding `React.createElement` is essential for grasping React’s core, but in practice, JSX will save you time and effort, making it the industry standard for React development.
