@@ -1,0 +1,16 @@
+### Summary: React's Behavior with Context and `useContext`
+
+#### Context Value Updates
+- When a component uses the `useContext` hook to access a context value, React **re-executes the component function** if the context value changes.
+- This re-execution ensures the component can produce an updated UI based on the latest context value.
+
+#### Comparison to Other Triggers for Re-execution
+- React re-executes a component function not only when context values change but also:
+  - When internal state in the component updates.
+  - When the parent component is re-rendered.
+
+#### Purpose of Re-execution
+- The re-execution of the component is **essential** for React’s declarative approach, ensuring the user interface stays in sync with the latest data.
+
+#### Key Takeaway
+- Components consuming context are inherently reactive to context value changes, making context a powerful tool for state management across an app.
