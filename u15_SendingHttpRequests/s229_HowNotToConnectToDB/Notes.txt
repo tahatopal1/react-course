@@ -1,0 +1,98 @@
+### **Connecting a React App to a Backend**
+
+#### **Why Do We Need a Backend?**
+- React is a **frontend framework**, meaning all its code runs **in the browser**.
+- If an application requires **shared data** (e.g., an online store with products and orders), it needs a **centralized backend** to store and retrieve data.
+- A backend ensures:
+  - **Data security** (users can’t modify the database directly).
+  - **Controlled access** (restricting actions based on user permissions).
+  - **Efficient data management** (handling authentication, validation, etc.).
+
+#### **Why You Should Not Connect React Directly to a Database**
+- All React code **runs in the browser**, making it **publicly accessible**.
+- If database credentials were included in React code, **users could extract them**, leading to:
+  - **Unauthorized access** to sensitive data.
+  - **Data corruption or deletion** by malicious users.
+- Browsers **don’t have direct access** to file systems or databases.
+
+#### **How React Communicates with a Backend**
+- Instead of direct access, React **sends HTTP requests** to a **backend server**.
+- The **backend acts as a middleman**, processing requests and interacting with the database securely.
+- This is done via **API endpoints**, which:
+  - Accept **specific requests** (e.g., fetch data, update records).
+  - Reject **unauthorized requests** to ensure security.
+
+---
+
+### **Backend Technologies & API Endpoints**
+- A backend can be built using various technologies:
+  - **Node.js + Express (JavaScript)**
+  - **Spring Boot (Java)**
+  - **Django / Flask (Python)**
+  - **ASP.NET (C#)**
+  - **PHP, Ruby on Rails, etc.**
+- The backend exposes **RESTful APIs** or **GraphQL APIs**.
+- APIs consist of **endpoints** (URLs that handle requests).
+  - Example REST API endpoints:
+    - `GET /products` → Fetch all products.
+    - `POST /orders` → Create a new order.
+    - `DELETE /users/:id` → Delete a user.
+
+---
+
+### **Making API Requests in React**
+1. **Using Fetch API**
+   ```jsx
+   useEffect(() => {
+     fetch("https://api.example.com/products")
+       .then(response => response.json())
+       .then(data => setProducts(data))
+       .catch(error => console.error("Error fetching data:", error));
+   }, []);
+   ```
+   - **Sends a request** to the backend.
+   - **Handles the response** and updates the React state.
+
+2. **Using Axios (Alternative to Fetch)**
+   ```jsx
+   import axios from "axios";
+
+   useEffect(() => {
+     axios.get("https://api.example.com/products")
+       .then(response => setProducts(response.data))
+       .catch(error => console.error("Error:", error));
+   }, []);
+   ```
+   - Axios provides a **simpler syntax** for handling HTTP requests.
+
+---
+
+### **Frontend-Backend Separation**
+- **Frontend (React)**: Handles UI and user interactions.
+- **Backend (Server-side app)**: Manages data, authentication, and logic.
+- **Database (SQL/NoSQL)**: Stores structured or unstructured data.
+
+Example architecture:
+```
+React App (Frontend)  →  Backend API (Node.js, Java, Python, etc.)  →  Database (MySQL, MongoDB, etc.)
+```
+
+---
+
+### **Full-Stack React with Next.js**
+- Frameworks like **Next.js** allow integrating backend logic **within a React app**.
+- Unlike standalone backends, Next.js:
+  - Supports **API routes** (server functions within a React project).
+  - Still keeps backend logic **hidden from users**.
+  - Provides **better SEO and performance**.
+
+---
+
+### **Key Takeaways**
+- **React does not connect directly** to a database; it communicates with a **backend API**.
+- The **backend handles authentication, validation, and data access**.
+- **Use Fetch or Axios** to send requests from React to the backend.
+- A backend can be built with **various technologies** (Node.js, Java, Python, etc.).
+- **Next.js** offers a way to integrate backend logic into a React project.
+
+In the next steps, you’ll learn how to **connect React to a standalone backend** and **fetch data securely**.

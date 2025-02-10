@@ -1,0 +1,54 @@
+### **Optimizing a React Application**
+
+#### **Understanding the Problem**
+- Components **re-execute** when their **state changes**.
+- If a state update occurs in a **parent component**, all its **child components** also re-execute.
+- Example: Typing in an input field inside the `App` component causes all child components to re-execute, even if they don’t depend on the changed state.
+- While this doesn’t always impact the actual DOM rendering, it **wastes computation**.
+
+#### **Solution 1: Using `React.memo`**
+- React provides the `memo` function to **prevent unnecessary re-executions**.
+- It works by comparing **previous and new props** of a component.
+- If the props **haven’t changed**, React skips re-executing the component.
+
+##### **How to Use `React.memo`**
+```jsx
+import React, { memo } from 'react';
+
+const Counter = memo(function Counter({ initialCount }) {
+  // Component logic here
+  return <div>Count: {initialCount}</div>;
+});
+
+export default Counter;
+```
+- Wrap the **component function** with `memo`.
+- React **stores the last props** and only re-executes the component if they change.
+- It prevents **unnecessary re-renders** when parent components update.
+
+#### **Limitations of `React.memo`**
+- It only prevents re-executions **triggered by parent updates**.
+- It **doesn’t prevent** re-executions due to **internal state changes**.
+- **For objects/arrays**, React checks if the **reference** is the same, not the content.
+  - Example: `{ key: "value" }` will always be considered a **new object**, triggering re-renders.
+
+#### **Where to Use `React.memo` Effectively**
+- **Use it on components higher up** in the tree.
+- If a component **prevents its own execution**, all its **children** also avoid execution.
+- **Do not wrap every component** with `memo`, as it adds **prop comparison overhead**.
+- Best used when:
+  - The component **receives props that rarely change**.
+  - Preventing re-renders **significantly improves performance**.
+
+#### **When `React.memo` is NOT Useful**
+- **If the component’s props always change**, the check is **wasted computation**.
+- **Small applications** don’t benefit much from it.
+- If the component’s logic is already **lightweight**, `memo` won’t provide measurable improvements.
+
+#### **Key Takeaways**
+- **Avoid unnecessary re-executions** by using `memo` strategically.
+- **Place `memo` higher** in the component tree where possible.
+- **Check if the performance gain is worth it** before using `memo` everywhere.
+- **Use it cautiously** in large applications where optimizations matter.
+
+Using `React.memo` correctly can help improve performance, but overusing it can introduce unnecessary complexity.

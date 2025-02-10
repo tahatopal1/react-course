@@ -1,0 +1,75 @@
+### **How React Schedules and Executes State Updates**
+
+#### **State Updates Are Scheduled, Not Instant**
+- When calling a state updater like `setChosenCount(newValue)`, the update is **scheduled**, not applied immediately.
+- If you log the state **immediately after updating it**, you will still see the **old value**.
+- React ensures the update **takes effect in the next component re-execution**.
+
+#### **Example of Scheduled State Updates**
+```jsx
+const [count, setCount] = useState(0);
+
+function handleClick() {
+  setCount(10);
+  console.log(count); // Logs the old state (0), not 10
+}
+```
+- The `console.log(count)` prints the **previous state** because React **hasn't executed the update yet**.
+
+#### **Updating State Based on Previous State**
+- When updating state based on the **previous value**, use the **functional form** of `setState`:
+```jsx
+setCount((prevCount) => prevCount + 1);
+```
+- React **ensures the latest state** is used when scheduling multiple updates.
+
+##### **Why This Matters**
+- If you update state **like this**:
+  ```jsx
+  setChosenCount(newCount);
+  setChosenCount(chosenCount + 1); 
+  ```
+  - The second update still references the **old state**, leading to incorrect results.
+- Instead, use the **functional form**:
+  ```jsx
+  setChosenCount((prevCount) => prevCount + 1);
+  ```
+  - This guarantees updates are applied **in the correct order**.
+
+#### **Example: Correcting a State Dependency Issue**
+```jsx
+setChosenCount((prevCount) => prevCount + 1);
+setChosenCount((prevCount) => prevCount + 2);
+```
+- React ensures the **latest** state is used in each function execution.
+
+---
+
+### **State Batching: Preventing Unnecessary Re-Renders**
+- **Multiple state updates inside the same function do NOT trigger multiple renders**.
+- React **batches state updates** together to avoid inefficiency.
+
+#### **Example of Batching**
+```jsx
+function handleClick() {
+  setCount((prev) => prev + 1);
+  setCount((prev) => prev + 2);
+  setCount((prev) => prev + 3);
+}
+```
+- Instead of **three re-renders**, React applies **one** update with the final state.
+
+#### **When Batching Occurs**
+- **Batching happens automatically** for multiple updates inside event handlers.
+- However, if an update happens **inside a timeout or external API call**, React may not batch them.
+
+---
+
+### **Key Takeaways**
+- **State updates are asynchronous** → They are scheduled and executed in the next render.
+- **Do not expect updated state immediately** after calling `setState()`.
+- **Use functional updates** when relying on the previous state.
+- **React batches multiple state updates** into a single re-render for efficiency.
+- **Understanding scheduling and batching helps optimize performance**.
+
+By following these principles, you can write **efficient and bug-free state updates** in React.
