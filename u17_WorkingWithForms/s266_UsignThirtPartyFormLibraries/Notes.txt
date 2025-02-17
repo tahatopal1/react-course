@@ -1,0 +1,1 @@
+Instead of creating inputs by hand, there are many 3rd party librares could be used such as React Hook Form or Formik
