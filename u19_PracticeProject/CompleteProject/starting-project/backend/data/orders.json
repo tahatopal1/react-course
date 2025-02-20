@@ -1,1 +1,74 @@
-[{"items":[{"id":"m3","name":"Caesar Salad","price":"7.99","description":"Romaine lettuce tossed in Caesar dressing, topped with croutons and parmesan shavings.","image":"images/caesar-salad.jpg","quantity":1},{"id":"m2","name":"Margherita Pizza","price":"12.99","description":"A classic pizza with fresh mozzarella, tomatoes, and basil on a thin and crispy crust.","image":"images/margherita-pizza.jpg","quantity":2},{"id":"m1","name":"Mac & Cheese","price":"8.99","description":"Creamy cheddar cheese mixed with perfectly cooked macaroni, topped with crispy breadcrumbs. A classic comfort food.","image":"images/mac-and-cheese.jpg","quantity":1}],"customer":{"name":"John Doe","email":"johnd@mail.co","street":"13th Street","postal-code":"12345","city":"Gotham City"},"id":"72.46989881249787"}]
+[
+  {
+    "items": [
+      {
+        "id": "m3",
+        "name": "Caesar Salad",
+        "price": "7.99",
+        "description": "Romaine lettuce tossed in Caesar dressing, topped with croutons and parmesan shavings.",
+        "image": "images/caesar-salad.jpg",
+        "quantity": 1
+      },
+      {
+        "id": "m2",
+        "name": "Margherita Pizza",
+        "price": "12.99",
+        "description": "A classic pizza with fresh mozzarella, tomatoes, and basil on a thin and crispy crust.",
+        "image": "images/margherita-pizza.jpg",
+        "quantity": 2
+      },
+      {
+        "id": "m1",
+        "name": "Mac & Cheese",
+        "price": "8.99",
+        "description": "Creamy cheddar cheese mixed with perfectly cooked macaroni, topped with crispy breadcrumbs. A classic comfort food.",
+        "image": "images/mac-and-cheese.jpg",
+        "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": "John Doe",
+      "email": "johnd@mail.co",
+      "street": "13th Street",
+      "postal-code": "12345",
+      "city": "Gotham City"
+    },
+    "id": "72.46989881249787"
+  },
+  {
+    "items": [
+      {
+        "id": "m2",
+        "name": "Margherita Pizza",
+        "price": "12.99",
+        "description": "A classic pizza with fresh mozzarella, tomatoes, and basil on a thin and crispy crust.",
+        "image": "images/margherita-pizza.jpg",
+        "quantity": 1
+      },
+      {
+        "id": "m3",
+        "name": "Caesar Salad",
+        "price": "7.99",
+        "description": "Romaine lettuce tossed in Caesar dressing, topped with croutons and parmesan shavings.",
+        "image": "images/caesar-salad.jpg",
+        "quantity": 2
+      },
+      {
+        "id": "m1",
+        "name": "Mac & Cheese",
+        "price": "8.99",
+        "description": "Creamy cheddar cheese mixed with perfectly cooked macaroni, topped with crispy breadcrumbs. A classic comfort food.",
+        "image": "images/mac-and-cheese.jpg",
+        "quantity": 3
+      }
+    ],
+    "customer": {
+      "name": "John Doe",
+      "email": "john@mail.co",
+      "street": "13th Street",
+      "postal-code": "12345",
+      "city": "Gotham City"
+    },
+    "id": "75.34815454370336"
+  }
+]

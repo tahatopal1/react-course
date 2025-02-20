@@ -1,0 +1,24 @@
+### React Context vs Redux  
+
+- **React Context**:  
+  - Used to manage cross-component or app-wide state.  
+  - Prevents **prop drilling** by providing a centralized state.  
+  - Can be **complex** in large applications.  
+  - Can lead to **deeply nested JSX** if multiple Context Providers are used.  
+  - Using a **single large Context Provider** can make the code **hard to maintain**.  
+  - **Not optimized for high-frequency state updates** (e.g., real-time data updates).  
+
+- **Redux**:  
+  - A **Flux-like state management system** that solves Context’s limitations.  
+  - **Better suited for high-frequency state changes** than React Context.  
+  - Can simplify state management in **large applications**.  
+
+- **When to Use Redux?**  
+  - Small/medium apps may not need Redux.  
+  - Large apps or apps with **frequent state updates** benefit from Redux.  
+  - Can **combine Redux & Context**, using Redux for app-wide state and Context for localized state.  
+
+- **Why Learn Redux?**  
+  - Helps manage **complex, large-scale state efficiently**.  
+  - Avoids performance issues of React Context.  
+  - Prepares you for real-world React projects.

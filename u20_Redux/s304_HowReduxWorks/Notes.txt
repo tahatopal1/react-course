@@ -1,0 +1,28 @@
+### How Redux Works  
+
+- **Central Data Store**  
+  - Redux manages all app-wide state in **one** store.  
+  - State examples: **authentication, theming, user input**.  
+  - Components **subscribe** to the store to access state.  
+  - When state changes, subscribed components are **notified** and re-rendered.  
+
+- **State Updates in Redux**  
+  - Components **never** modify the store directly.  
+  - State changes happen through **reducers**.  
+
+- **Reducers**  
+  - A **pure function** responsible for updating state.  
+  - Takes the **current state** and an **action**, returns **new state**.  
+  - Similar concept to `useReducer`, but not related to React hooks.  
+
+- **Actions & Dispatching**  
+  - Components **dispatch actions** to trigger state changes.  
+  - Actions are **simple objects** describing what should happen.  
+  - Redux **forwards actions** to reducers, which process them.  
+  - The **new state replaces** the old state in the store.  
+
+- **Data Flow in Redux**  
+  1. **Components dispatch actions** → Describe desired changes.  
+  2. **Reducers process actions** → Generate new state.  
+  3. **Redux updates the store** → Notifies subscribed components.  
+  4. **Components re-render** → Reflect new state in UI.  
