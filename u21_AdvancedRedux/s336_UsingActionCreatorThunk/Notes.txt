@@ -1,0 +1,58 @@
+### **Handling Asynchronous Logic in Redux: Action Creators and Thunks**  
+
+When dealing with **asynchronous operations** (like API requests) in Redux, you must ensure that your **reducers remain pure** while managing side effects elsewhere. Redux provides an elegant solution through **action creator thunks**, which allow you to handle async operations before dispatching the final state update.
+
+---
+
+### **1. Why Not Handle Side Effects in Components?**  
+Previously, we handled side effects (such as **sending an API request when adding an item to the cart**) **inside components**. While this works, it has drawbacks:  
+✅ **Components become bloated** with business logic.  
+✅ **Logic is duplicated** in multiple places (e.g., updating the cart in multiple components).  
+✅ **Less reusability**—other parts of the app can’t easily reuse this logic.  
+
+**Alternative:** Move side-effect-heavy logic into Redux **action creators**.
+
+---
+
+### **2. What is a Redux Thunk?**  
+- A **thunk** is a function that **delays an action** until certain conditions are met (e.g., an API request finishes).  
+- Instead of returning an **action object**, a thunk **returns another function** that executes logic before dispatching actions.  
+- This function **receives `dispatch` as an argument**, allowing it to **dispatch multiple actions** over time.  
+
+---
+
+### **3. Creating a Custom Action Creator with a Thunk**  
+- Instead of placing the API request logic inside a component, we **define an action creator that returns a function**.  
+- This function will:  
+  1. **Send a request** to the backend.  
+  2. **Dispatch an action to update the state** (once data is received).  
+  3. **Handle loading and error states**.  
+
+**Benefits:**  
+✅ **Keeps components lean**—they simply dispatch a single action instead of handling multiple updates.  
+✅ **Centralizes API logic**—makes the application easier to debug and maintain.  
+✅ **Allows multiple dispatches**—can show loading indicators before updating state.  
+
+---
+
+### **4. How Redux Toolkit Supports Thunks**  
+- **Redux Toolkit automatically supports thunk functions**—no extra setup is required.  
+- If a dispatched action is a function (instead of an action object), Redux will **execute the function** and provide it with `dispatch`.  
+- This allows action creators to handle **asynchronous logic before dispatching state updates**.  
+
+---
+
+### **5. Flow of a Redux Thunk-Based Action Creator**  
+
+1. **Component dispatches an action creator (thunk)**  
+2. **Thunk executes an async operation (e.g., an API request)**  
+3. **Thunk dispatches different actions based on success/failure**  
+4. **Reducers update state accordingly**  
+
+---
+
+### **6. Why Use Action Creator Thunks?**  
+✅ **Improves code organization**—separates **side effects (async logic)** from **UI components**.  
+✅ **Enhances reusability**—logic can be used in different parts of the app.  
+✅ **Allows precise control**—multiple actions can be dispatched in sequence (e.g., show a loading state before updating).  
+✅ **Keeps reducers pure**—ensures that reducers only handle state updates, not async logic.  

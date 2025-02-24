@@ -1,0 +1,57 @@
+### **Asynchronous Code and Side Effects in Redux**  
+
+Redux enforces **strict rules** to maintain predictable state updates, especially when dealing with **asynchronous operations** like API requests. Understanding where to handle side effects is crucial for maintaining clean and maintainable Redux logic.  
+
+---
+
+### **1. Reducers Must Be Pure and Synchronous**  
+- A **reducer function** must:  
+  ✅ Take the **previous state** and an **action** as input.  
+  ✅ Return a **new state** as output.  
+  ✅ Always return **the same result for the same input** (pure function).  
+  ✅ Be **side-effect-free** (no API calls, local storage updates, or asynchronous logic).  
+
+- **Why are reducers synchronous?**  
+  - Redux **relies on immutability and predictability**.  
+  - If reducers had asynchronous logic, their execution order could become unpredictable.  
+  - Asynchronous operations like API requests **do not belong in reducers**.  
+
+---
+
+### **2. Where Should Side Effects Be Handled?**  
+Since reducers cannot handle asynchronous logic, Redux provides **two main options**:  
+
+#### **Option 1: Handling Side Effects in Components**  
+- Components can handle side effects using **React’s `useEffect` hook**.  
+- Once the asynchronous operation (e.g., API request) completes, the component **dispatches an action** to update Redux state.  
+- **Redux remains unaware of the side effect**, ensuring that reducers stay pure.  
+
+**Pros:**  
+✔ Simple to implement for small applications.  
+✔ Keeps Redux logic clean and free of side effects.  
+
+**Cons:**  
+✖ Not ideal for **complex state logic** or actions affecting multiple parts of the app.  
+
+---
+
+#### **Option 2: Handling Side Effects with Custom Action Creators**  
+- Instead of relying on Redux Toolkit’s **auto-generated actions**, developers can write **custom action creators**.  
+- These action creators can include **asynchronous logic**, such as API requests, before dispatching a state update.  
+- Redux provides **middleware solutions** (like **Redux Thunk**) to **allow action creators to handle async logic**.  
+
+**Pros:**  
+✔ Keeps Redux logic centralized and scalable.  
+✔ Makes state transitions **more predictable**.  
+
+**Cons:**  
+✖ Requires additional setup using middleware.  
+
+---
+
+### **3. Redux’s Solution for Handling Async Code**  
+- Redux **provides middleware** to handle **async operations inside action creators**.  
+- The most common middleware is **Redux Thunk**, which allows action creators to return functions instead of plain action objects.  
+- Middleware acts as a **bridge** between **dispatching an action** and **updating the store**, enabling API calls before dispatching updates.  
+
+---

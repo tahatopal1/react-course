@@ -1,0 +1,76 @@
+### **Handling State Updates and Side Effects in Redux: Best Practices**  
+
+When working with Redux, structuring state updates correctly is crucial for maintainability and performance. This section explores **why we should avoid data transformation in components**, the **best place to handle different types of logic**, and how to properly prepare data before sending HTTP requests.
+
+---
+
+### **1. Why Shouldn't We Handle State Updates in Components?**  
+A common mistake in Redux-based applications is handling state transformations **directly inside components** instead of reducers. The example in `ProductItem` demonstrated:  
+- Retrieving the **current cart state** from Redux using `useSelector`.  
+- Computing the **new total quantity** and **new items list**.  
+- Ensuring that the state **is not mutated directly** (creating new copies instead).  
+- Dispatching an **action** to update the Redux store.  
+
+#### **Problems with This Approach**  
+✅ **Breaks Redux’s central state management** → The component is responsible for transforming data, making Redux less meaningful.  
+✅ **Code duplication** → The same logic must be repeated in multiple components (e.g., `CartItem`).  
+✅ **Reduced maintainability** → Components become bloated with state transformation logic.  
+
+---
+
+### **2. Where Should We Handle State Transformations?**  
+Redux provides **three possible locations** for handling application logic:  
+
+| Approach  | Use Case | Good Practice? |
+|-----------|---------|---------------|
+| **Reducers** (via `createSlice`) | Synchronous, side-effect-free transformations (e.g., updating counts, modifying arrays) | ✅ **Recommended for most state updates** |
+| **Components** (via `useEffect` or inline updates) | Local UI state, minimal transformations, handling user input | ❌ **Not recommended for Redux state updates** |
+| **Action Creators** (custom functions) | **Asynchronous operations** (e.g., fetching data, sending API requests) | ✅ **Best for side-effect-heavy logic** |
+
+---
+
+### **3. How Redux Toolkit Handles State Transformations**  
+- Inside reducers, **Immer.js** ensures immutability, so we can **write state changes as if they were mutations** (`state.counter++`), but under the hood, Redux Toolkit **creates a new immutable state object**.  
+- However, **this only applies within reducers**—components **do not** get this automatic immutability handling.  
+
+#### **Key Rule**:  
+🔥 **Synchronous, side-effect-free logic should be handled in reducers.**  
+🔥 **Asynchronous logic (API requests, local storage updates) should be handled in action creators.**  
+
+---
+
+### **4. The Issue with the `replaceCart` Approach**  
+Instead of relying on traditional `addItemToCart` and `removeItemFromCart` reducers, the example used a **single "replace cart" action** that:  
+- **Computes** the new cart state inside the component.  
+- Dispatches an action to **overwrite** the cart state entirely.  
+
+🔴 **Why is this suboptimal?**  
+- Redux reducers are meant to **handle business logic**, not just act as storage containers.  
+- The component is **taking over logic that belongs inside Redux**, leading to **bloated components**.  
+- It **removes the benefits of Redux**, where state transformations should be centralized in reducers.  
+
+✅ **A Better Approach**:  
+- Perform **data transformations inside reducers**, **not in components**.  
+- Use `replaceCart` **only** when necessary (e.g., syncing state with the backend).  
+- For adding/removing items, keep **reducers responsible** for modifying state.  
+
+---
+
+### **5. Preparing Data Before Sending HTTP Requests**  
+Since we cannot send an API request from inside reducers, we must:  
+1. **Prepare data inside reducers** (ensuring Redux state is structured correctly).  
+2. **Trigger the API request inside an action creator** before dispatching the final state update.  
+
+🔵 **Next Step: Implementing Action Creators for Async Logic**  
+- Instead of modifying state in components, **move API calls into Redux action creators**.  
+- Introduce **Redux Thunk**, which allows **dispatching functions that contain async logic**.  
+- Ensure that **state transformations remain inside reducers**, while **action creators handle side effects**.  
+
+---
+
+### **Key Takeaways**  
+✅ **Avoid handling Redux state updates inside components.**  
+✅ **Reducers should handle synchronous, side-effect-free transformations.**  
+✅ **Action creators should handle asynchronous logic (API requests).**  
+✅ **Using the `replaceCart` approach everywhere is suboptimal—state transformations should still happen in reducers.**  
+✅ **Next, we will implement async action creators with Redux Thunk to correctly manage API calls.**
