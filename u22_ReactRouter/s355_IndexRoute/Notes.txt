@@ -1,0 +1,33 @@
+### **Index Routes in React Router**  
+
+- **Problem:**  
+  - Sometimes, a child route should load when its parent route is active, without defining an explicit path.  
+  - Example: The homepage should load when visiting `/`, but it’s inside a layout route.  
+
+- **Solution: Using `index` Routes**  
+  - Instead of leaving `path` empty, use the `index` property:  
+    ```jsx
+    <Route path="/" element={<RootLayout />}>
+      <Route index element={<HomePage />} />
+      <Route path="products" element={<ProductsPage />} />
+    </Route>
+    ```
+  - This means:  
+    - When the parent route (`/`) is active, `HomePage` loads by default.  
+    - Other child routes (`/products`, `/products/:id`) are not affected.  
+
+- **Behavior of Index Routes**  
+  - An `index` route is loaded **only** when the parent route is exactly active.  
+  - It does **not** match nested paths like `/products`.  
+  - It provides a **cleaner** and more explicit way to define default child routes.  
+
+- **When to Use Index Routes?**  
+  - When you have a **layout wrapper** and want a default page inside it.  
+  - When defining a default **homepage** or a main dashboard inside a section.  
+  - If leaving `path=""` feels unclear, `index` improves readability.  
+
+### **Key Takeaways**  
+- `index` routes define the default route when the parent is active.  
+- They replace leaving `path` empty (`""`) for better clarity.  
+- Useful when working with **nested layouts** in React Router.  
+- They do **not** apply when navigating to child routes like `/products`.

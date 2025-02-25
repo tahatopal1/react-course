@@ -1,0 +1,47 @@
+### **Highlighting Active Links in React Router**  
+
+- **Current Issues**  
+  - No visual feedback when hovering over links.  
+  - No indication of which link is currently active.  
+
+- **Adding Hover and Active Styles**  
+  - Define styles in `MainNavigation.module.css` for anchor (`<a>`) tags, since React Router's `Link` component renders as `<a>`.  
+  - Example enhancements:  
+    - Change color when hovering.  
+    - Add `text-decoration: underline` for better visibility.  
+  - However, clicking a link does not keep it highlighted—this needs further adjustment.
+
+- **Using `NavLink` for Active Link Styling**  
+  - `react-router-dom` provides `NavLink`, an alternative to `Link`.  
+  - `NavLink` allows conditional styling based on whether the link is active.  
+
+- **How `NavLink` Works**  
+  - Instead of a static `className` string, `NavLink` accepts a function returning a class name.  
+  - This function receives an object containing `isActive`, a boolean indicating if the link is currently active.  
+  - Example usage:  
+    ```jsx
+    <NavLink to="/" className={({ isActive }) => isActive ? classes.active : undefined}>Home</NavLink>
+    ```
+  - When the link matches the active route, it applies the `active` class from the CSS module.
+
+- **Fixing the Home Page Always Being Active**  
+  - By default, `NavLink` considers a link active if the current route starts with its `to` value.  
+  - Since all paths start with `/`, the Home link (`/`) is always active.  
+  - To prevent this, use the `end` prop:  
+    ```jsx
+    <NavLink to="/" end className={({ isActive }) => isActive ? classes.active : undefined}>Home</NavLink>
+    ```
+  - This ensures the Home link is only active when the exact path (`/`) is visited.
+
+- **Alternative Styling with Inline Styles**  
+  - Instead of CSS classes, inline styles can also be used conditionally:  
+    ```jsx
+    <NavLink to="/" style={({ isActive }) => ({ color: isActive ? 'red' : 'black' })}>Home</NavLink>
+    ```
+  - This approach allows dynamic styling without needing a CSS module.
+
+- **Summary**  
+  - `NavLink` provides built-in support for highlighting active links.  
+  - The `isActive` property helps conditionally apply styles.  
+  - The `end` prop ensures exact matches for links like Home (`/`).  
+  - Inline styles can be used as an alternative to CSS classes.

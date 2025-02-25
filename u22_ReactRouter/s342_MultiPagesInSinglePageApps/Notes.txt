@@ -1,0 +1,30 @@
+### **React Routing Overview**  
+
+- **What is Routing?**  
+  - Routing allows different URL paths to load different content on a website.  
+  - Traditionally, websites load new HTML pages for different URLs (multi-page applications).  
+  - In React applications, we need a way to handle different URLs without reloading the page.
+
+- **Why Routing Matters in React?**  
+  - Previous projects in the course didn’t support URL changes affecting content.  
+  - Without routing, the URL remains static, limiting navigation within the app.  
+  - Implementing routing enables URL-based navigation without full page reloads.
+
+- **Traditional vs. Single-Page Applications (SPA)**  
+  - **Multi-Page Applications (MPA)**  
+    - Each new URL request fetches a new HTML file from the server.  
+    - Leads to page reloads, slowing down user experience.  
+  - **Single-Page Applications (SPA)**  
+    - Only one HTML file is initially loaded.  
+    - JavaScript dynamically updates the content based on user interaction.  
+    - Improves performance by avoiding full page reloads.
+
+- **Client-Side Routing in React**  
+  - React can simulate routing by detecting URL changes and rendering different components.  
+  - Instead of fetching new HTML pages, React dynamically updates content based on the active URL.  
+  - This approach maintains the benefits of SPAs while enabling URL-based navigation.
+
+- **Goal of This Section**  
+  - Learn how to implement routing in React.  
+  - Use client-side navigation to display different components based on the URL.  
+  - Maintain a seamless user experience without full page reloads.

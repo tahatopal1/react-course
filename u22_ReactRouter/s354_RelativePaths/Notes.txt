@@ -1,0 +1,47 @@
+### **Understanding Paths in React Router**  
+
+#### **Absolute vs. Relative Paths**  
+- **Absolute Paths**  
+  - Start with `/` (e.g., `/products`).  
+  - Always refer to a fixed location in the app, independent of the current route.  
+  - If a parent route is changed (e.g., from `/` to `/root`), absolute paths may no longer match.  
+
+- **Relative Paths**  
+  - Do **not** start with `/` (e.g., `products`).  
+  - Are appended to the parent route dynamically.  
+  - Example: If the parent route is `/root`, defining `products` as a child makes the full path `/root/products`.  
+
+- **Fixing Path Issues**  
+  - If child routes are absolute (`/products` inside `/root`), they won’t match properly.  
+  - Convert child routes to **relative paths** by removing the leading `/`, so they inherit the parent path.  
+
+#### **Paths in Navigation and Links**  
+- **Navigation links (`Link`, `NavLink`) must match route paths.**  
+- If a navigation link uses an absolute path (`to="/products"`), it always refers to `/products`.  
+- If the app structure changes (e.g., wrapping everything in `/root`), absolute links might break.  
+- Use **relative paths** (`to="products"`) so links adjust dynamically based on the active route.  
+
+#### **Handling Nested Routes & Back Navigation**  
+- **React Router resolves relative paths based on the parent-child relationship in route definitions.**  
+- **Special notation: `".."`**  
+  - `to=".."` moves up one level in the route hierarchy.  
+  - By default, it removes **entire route segments**, not just the last path part.  
+
+- **The `relative` Prop in Links**  
+  - Default behavior: Paths resolve relative to **route definitions**.  
+  - Can be changed with `relative="path"`, making paths resolve based on the **current URL instead**.  
+
+#### **Example: Fixing Back Navigation Issue**  
+1. **Problem**: Clicking "Back" from `/products/123` incorrectly navigates to `/` instead of `/products`.  
+2. **Reason**: By default, `to=".."` removes the entire `/products/123`, since `/products` and `/products/:id` are **siblings**.  
+3. **Solution**: Use `relative="path"` to remove only `/123`, keeping `/products` intact.  
+   ```jsx
+   <Link to=".." relative="path">Back</Link>
+   ```
+
+#### **Key Takeaways**  
+- **Absolute paths** always start from the root (`/`).  
+- **Relative paths** adjust dynamically based on the parent route.  
+- In **navigation**, using absolute paths may cause issues if the app structure changes.  
+- `".."` moves up in the route tree but behaves differently based on `relative="path"` vs. `relative="route"`.  
+- Understanding paths ensures navigation and routing work smoothly even as the app evolves.
