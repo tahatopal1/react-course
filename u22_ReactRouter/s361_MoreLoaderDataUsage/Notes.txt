@@ -1,0 +1,31 @@
+### **Using `useLoaderData` in React Router**  
+
+#### **Where Can You Use `useLoaderData`?**  
+- `useLoaderData` retrieves data loaded via a **route's loader**.  
+- It can be used in **any component** that is rendered inside the route where the loader is defined.  
+- It works in **both page components and nested components** within the same route.  
+
+#### **Example Usage in a Component**  
+Instead of using `useLoaderData` in the page component, you can directly call it inside a child component:  
+```jsx
+import { useLoaderData } from "react-router-dom";
+
+const EventsList = () => {
+  const events = useLoaderData();  // Works here since it's within the same route
+  return <div>{events.map(event => <p key={event.id}>{event.title}</p>)}</div>;
+};
+```
+
+#### **Where `useLoaderData` Won’t Work**  
+- **Cannot be used in a higher-level route** (e.g., `RootLayout`), because data is only available within or below the route where the loader is defined.  
+- If used in a **parent route component** that does not have a corresponding loader, it will return `undefined`.  
+
+#### **Fixing Improper Use of `useLoaderData`**  
+- If `useLoaderData` is used **too high** in the route hierarchy, move it to the **correct** page-level component.  
+- Alternatively, **pass the data as props** to child components instead of calling `useLoaderData` inside them.  
+
+#### **Key Takeaways**  
+- `useLoaderData` can be used in any **child or same-level component** of the route where the loader is defined.  
+- It **cannot** be used in **higher-level** routes.  
+- Data can be passed **via props** if a component needs access to it but is outside the route where the loader is defined.  
+- Choosing where to use `useLoaderData` depends on **your app's structure and how components share data**.
