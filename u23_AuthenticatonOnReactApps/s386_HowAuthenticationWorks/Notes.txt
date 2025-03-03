@@ -1,0 +1,54 @@
+### **Authentication in React Apps: Understanding Token-Based Authentication**  
+
+#### **What is Authentication?**  
+- Authentication ensures that certain **backend resources are protected** and not accessible to everyone.  
+- The frontend (React app) **must authenticate** with the backend **before accessing protected resources**.  
+
+#### **How Authentication Works?**  
+1. **User sends credentials** (e.g., email & password) to the backend.  
+2. **Backend validates** the credentials.  
+3. **If valid, the backend responds with proof of authentication** (not just "yes" or "no").  
+4. **Client (React app) stores this proof** and uses it for future requests.  
+
+#### **Why Can't We Just Store "Yes" as Proof?**  
+- If the server simply replied with "Yes, you're logged in," the client could **fake authentication**.  
+- Instead, we need a **secure** way to verify authentication.  
+
+#### **Two Main Authentication Methods**  
+
+1. **Server-Side Sessions**  
+   - The backend **stores authentication info** in a session linked to a unique user ID.  
+   - The client gets a session ID and sends it in each request.  
+   - **Requires a tightly coupled frontend-backend** (not ideal for React apps).  
+
+2. **Token-Based Authentication (JWT - JSON Web Token)**
+   - **Preferred for decoupled frontend-backend architectures like React.**  
+   - Backend generates a **JWT (JSON Web Token)** after authentication.  
+   - This token is **not stored on the backend** but is signed with a **private key**.  
+   - The client **stores this token** and sends it with future requests.  
+   - The backend **validates** the token using the private key.  
+
+#### **How JWT Authentication Works in This Project?**  
+
+- The **dummy backend API** enforces authentication for certain actions (e.g., creating/updating events).  
+- After login, the backend generates a **JWT** and sends it to the client.  
+- The client **stores** the JWT and attaches it to **protected API requests**.  
+- The backend uses **middleware** to check if the request has a valid JWT.  
+
+#### **Protected vs. Public API Routes**  
+- Some API routes **don’t require authentication** (e.g., fetching all events).  
+- Others **require a valid JWT** (e.g., creating or updating an event).  
+- If a request is made **without a valid JWT**, the backend denies access.  
+
+#### **What We Will Implement in React**  
+- **Store the JWT** after login.  
+- **Attach JWT to future API requests** to access protected routes.  
+- **Use the token to determine if a user is logged in** (e.g., show/hide logout button).  
+
+#### **Key Takeaways**  
+- **Server-side sessions** are not ideal for decoupled React apps.  
+- **JWT authentication** allows the backend to remain stateless.  
+- The backend **issues a token** instead of storing session data.  
+- React app **stores the token and attaches it to API requests**.  
+- The backend **verifies the token using a private key**.  
+- Some routes require authentication, while others are publicly accessible.

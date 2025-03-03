@@ -1,0 +1,373 @@
+ChatGPT Conversation
+------------------------------------------------------
+
+QUESTION
+------------------------------------------------------
+
+App.js:
+
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import EditEventPage from "./pages/EditEvent";
+import ErrorPage from "./pages/Error";
+import EventDetailPage, {
+  loader as eventDetailLoader,
+  action as deleteEventAction,
+} from "./pages/EventDetail";
+import EventsPage, { loader as eventsLoader } from "./pages/Events";
+import EventsRootLayout from "./pages/EventsRoot";
+import HomePage from "./pages/Home";
+import NewEventPage from "./pages/NewEvent";
+import RootLayout from "./pages/Root";
+import { action as manipulateEventAction } from "./components/EventForm";
+import NewsletterPage, { action as newsletterAction } from "./pages/Newsletter";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: "events",
+        element: <EventsRootLayout />,
+        children: [
+          {
+            index: true,
+            element: <EventsPage />,
+            loader: eventsLoader,
+          },
+          {
+            path: ":eventId",
+            id: "event-detail",
+            loader: eventDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage />,
+                action: deleteEventAction,
+              },
+              {
+                path: "edit",
+                element: <EditEventPage />,
+                action: manipulateEventAction,
+              },
+            ],
+          },
+          {
+            path: "new",
+            element: <NewEventPage />,
+            action: manipulateEventAction,
+          },
+        ],
+      },
+      {
+        path: "newsletter",
+        element: <NewsletterPage />,
+        action: newsletterAction,
+      },
+    ],
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+export default App;
+
+Events.js (EventsPage)
+
+import { useLoaderData, Await } from "react-router-dom";
+
+import EventsList from "../components/EventsList";
+import { Suspense } from "react";
+
+function EventsPage() {
+  const { events } = useLoaderData();
+
+  return (
+    <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
+      <Await resolve={events}>
+        {(loadEvents) => <EventsList events={loadEvents} />}
+      </Await>
+    </Suspense>
+  );
+}
+
+export default EventsPage;
+
+async function loadEvents() {
+  const response = await fetch("http://localhost:8080/events");
+
+  if (!response.ok) {
+    throw new Response(JSON.stringify({ message: "Could not fetch events." }), {
+      status: 500,
+    });
+  } else {
+    const resData = await response.json();
+    return resData.events;
+  }
+}
+
+export async function loader() {
+  return {
+    events: loadEvents(), // should return promise, this is the mentality of defers
+  };
+}
+
+------------
+
+According to the code above, as you can see I'm using defers. Deferred loading procedures allow us to load the some part of the pages whilst waiting for others to be loaded.
+
+But I wonder what should we do if we have multiple parts need to be deferred and based on http calls.
+
+As far as I know, we can only have one loader in one route.
+
+---------------------------------------------------------------------------------
+
+ANSWER
+
+---------------------------------------------------------------------------------
+
+You're absolutely right that each **route can have only one `loader` function**, but within that `loader`, you can **defer multiple async calls**. This allows you to load multiple independent resources concurrently while ensuring that the initial UI is rendered as quickly as possible.
+
+---
+
+## **How to Handle Multiple Deferred Data Fetches?**
+If you have **multiple HTTP calls** that need to be **deferred**, you can:
+1. **Call multiple fetch functions inside a single `loader`**.
+2. **Return all Promises inside `defer()`**.
+3. **Use `Await` to resolve each part separately in the component.**
+
+---
+
+### **🔹 Example: Deferring Multiple API Calls**
+Assume we need:
+- A list of **events** (`/events` API).
+- A list of **categories** (`/categories` API).
+- A **user profile** (`/user-profile` API).
+
+### **✅ Updated `loader` in `Events.js`**
+```javascript
+import { defer } from "react-router-dom";
+
+async function loadEvents() {
+  const response = await fetch("http://localhost:8080/events");
+  if (!response.ok) {
+    throw new Response(JSON.stringify({ message: "Could not fetch events." }), {
+      status: 500,
+    });
+  }
+  const resData = await response.json();
+  return resData.events;
+}
+
+async function loadCategories() {
+  const response = await fetch("http://localhost:8080/categories");
+  if (!response.ok) {
+    throw new Response(JSON.stringify({ message: "Could not fetch categories." }), {
+      status: 500,
+    });
+  }
+  const resData = await response.json();
+  return resData.categories;
+}
+
+async function loadUserProfile() {
+  const response = await fetch("http://localhost:8080/user-profile");
+  if (!response.ok) {
+    throw new Response(JSON.stringify({ message: "Could not fetch user profile." }), {
+      status: 500,
+    });
+  }
+  const resData = await response.json();
+  return resData.user;
+}
+
+export async function loader() {
+  return defer({
+    events: loadEvents(),         // Returns a promise
+    categories: loadCategories(), // Returns a promise
+    user: loadUserProfile(),      // Returns a promise
+  });
+}
+```
+
+---
+
+### **🔹 Updating `EventsPage` to Use Multiple `Await`**
+```javascript
+import { useLoaderData, Await } from "react-router-dom";
+import { Suspense } from "react";
+import EventsList from "../components/EventsList";
+
+function EventsPage() {
+  const { events, categories, user } = useLoaderData();
+
+  return (
+    <div>
+      {/* Render User Profile as Soon as Available */}
+      <Suspense fallback={<p>Loading user profile...</p>}>
+        <Await resolve={user}>
+          {(userData) => <p>Welcome, {userData.name}!</p>}
+        </Await>
+      </Suspense>
+
+      {/* Render Categories */}
+      <Suspense fallback={<p>Loading categories...</p>}>
+        <Await resolve={categories}>
+          {(categoryData) => (
+            <ul>
+              {categoryData.map((cat) => (
+                <li key={cat.id}>{cat.name}</li>
+              ))}
+            </ul>
+          )}
+        </Await>
+      </Suspense>
+
+      {/* Render Events List */}
+      <Suspense fallback={<p style={{ textAlign: "center" }}>Loading events...</p>}>
+        <Await resolve={events}>
+          {(loadEvents) => <EventsList events={loadEvents} />}
+        </Await>
+      </Suspense>
+    </div>
+  );
+}
+
+export default EventsPage;
+```
+
+---
+
+## **🔹 Breakdown of What Happens**
+1. **Initial UI Renders Quickly**  
+   - The page renders without waiting for data.
+   - Suspense fallback UI (`Loading...`) is shown for each section.
+
+2. **Multiple API Calls Run in Parallel**  
+   - `loadEvents()`, `loadCategories()`, and `loadUserProfile()` execute **simultaneously**.
+   - Each section **renders as soon as its data arrives**.
+
+3. **Automatic Revalidation**  
+   - If an event is deleted, React Router will **re-run the loader** and refresh **only the affected parts**.
+
+---
+
+## **🚀 Key Takeaways**
+✔️ **You can have only one `loader` per route.**  
+✔️ **Use `defer()` to return multiple Promises.**  
+✔️ **Use `Await` and `Suspense` for partial page rendering.**  
+✔️ **Multiple API calls run in parallel** without blocking the page load.  
+✔️ **Each section updates independently** when its data is ready.  
+
+---
+
+QUESTION
+
+---------------------------------------------------------------------------------
+
+I want you to deliver a solution for a case that we need to show the page once all the data from multiple services loaded. But the http request must still be parallel.
+
+To achieve this, we need to:
+1. **Trigger multiple HTTP requests in parallel** ✅
+2. **Wait for all responses before rendering the page** ✅
+3. **Ensure a single `loader` (React Router allows only one per route)** ✅
+
+---
+
+## **💡 Solution: Using `Promise.all()` in the `loader`**
+Instead of `defer()`, we use **`Promise.all()`**, which:
+- **Sends requests in parallel** (no sequential waiting).
+- **Waits for all to complete before returning the data**.
+- **Ensures the page loads only after all data is available**.
+
+---
+
+### **🔹 Solution Implementation**
+#### **📌 `loader` with `Promise.all()`**
+```javascript
+export async function loader() {
+  const [events, categories, user] = await Promise.all([
+    loadEvents(),
+    loadCategories(),
+    loadUserProfile(),
+  ]);
+
+  return { events, categories, user }; // Only returns after all data is ready
+}
+```
+
+---
+#### **📌 Updated `EventsPage.js`**
+```javascript
+import { useLoaderData } from "react-router-dom";
+import EventsList from "../components/EventsList";
+
+function EventsPage() {
+  const { events, categories, user } = useLoaderData(); // Data is guaranteed to be ready
+
+  return (
+    <div>
+      <h2>Welcome, {user.name}!</h2>
+
+      <h3>Categories</h3>
+      <ul>
+        {categories.map((cat) => (
+          <li key={cat.id}>{cat.name}</li>
+        ))}
+      </ul>
+
+      <h3>Events</h3>
+      <EventsList events={events} />
+    </div>
+  );
+}
+
+export default EventsPage;
+```
+
+---
+
+## **🔹 How It Works**
+1. **All API requests start at the same time (`Promise.all()`).**
+2. **The loader waits for all responses before resolving.**
+3. **Once all data is ready, React Router renders the page with `useLoaderData()`.**
+4. **If any API request fails, the entire request fails (handled in `errorElement`).**
+
+---
+
+## **🚀 Alternative: Handling Partial Failures**
+If **some API calls might fail**, but you still want to show the page:
+```javascript
+export async function loader() {
+  try {
+    const [events, categories, user] = await Promise.allSettled([
+      loadEvents(),
+      loadCategories(),
+      loadUserProfile(),
+    ]);
+
+    return {
+      events: events.status === "fulfilled" ? events.value : [],
+      categories: categories.status === "fulfilled" ? categories.value : [],
+      user: user.status === "fulfilled" ? user.value : { name: "Guest" },
+    };
+  } catch (error) {
+    throw new Response(JSON.stringify({ message: "Failed to load data" }), { status: 500 });
+  }
+}
+```
+🔹 **`Promise.allSettled()`** ensures that even if **one API fails**, the page still loads with available data.
+
+---
+
+### **🚀 Summary**
+| Approach               | Requests Parallel? | Waits for All? | Handles Failures?               |
+|------------------------|--------------------|----------------|---------------------------------|
+| `defer()`              | ✅ Yes             | ❌ No          | ✅ Yes                         |
+| `Promise.all()`        | ✅ Yes             | ✅ Yes         | ❌ No (Fails all if one fails) |
+| `Promise.allSettled()` | ✅ Yes             | ✅ Yes         | ✅ Yes (Partial data)          |  
