@@ -1,0 +1,53 @@
+### **Optimizing React Apps for Deployment: Introduction to Lazy Loading**  
+
+#### **Why Optimize Before Deployment?**  
+- **Optimized apps load faster** and provide a better user experience.  
+- Initial load times impact **performance and user retention**.  
+- One key optimization technique is **lazy loading**.  
+
+---
+
+### **What is Lazy Loading?**  
+- **Without Lazy Loading:**  
+  - All JavaScript files are loaded **at once** before anything appears on the screen.  
+  - Large apps with many components slow down the initial page load.  
+  - Users must wait longer to see the first content.  
+
+- **With Lazy Loading:**  
+  - Only **essential components** are loaded at first.  
+  - Other components **load dynamically when needed** (e.g., when navigating to a new page).  
+  - This reduces the initial JavaScript size, improving page speed.  
+
+---
+
+### **How React Normally Handles Imports**  
+- When using `import` statements, React bundles **all imported files together** when building the app.  
+- Example:  
+  ```jsx
+  import PostList from '../components/PostList';
+  ```  
+  - This means `PostList` **must be loaded immediately**, even if the user never visits the blog page.  
+- **Problem:**  
+  - In larger apps with many pages, this results in **slow initial load times**.  
+
+---
+
+### **How Lazy Loading Solves This Issue**  
+- Instead of importing everything upfront, React allows **on-demand loading**.  
+- Lazy loading **delays loading a component until it's actually needed**.  
+- This ensures the initial page **loads faster** while other components load **only when required**.  
+
+---
+
+### **When to Use Lazy Loading?**  
+- For **large applications** with many routes and components.  
+- When certain components are **not needed on the initial page load**.  
+- When reducing **bundle size** is a priority for performance optimization.  
+
+---
+
+### **Key Takeaways**  
+- React **normally loads everything at once**, which can slow down large applications.  
+- **Lazy loading defers loading** of non-essential components until they are needed.  
+- This **improves performance** by reducing initial load time.  
+- **In the next steps, we will implement lazy loading** to see how it works in practice.

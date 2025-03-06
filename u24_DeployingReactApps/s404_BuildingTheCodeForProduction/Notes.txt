@@ -1,0 +1,44 @@
+### **Building a React App for Production**  
+
+#### **Why Do We Need a Build Step?**  
+- The code we write during development **is not ready for deployment**.  
+- **Development code is:**
+  - Readable but **not optimized**.  
+  - Uses features like **JSX**, which browsers **don’t understand**.  
+  - **Transformed on the fly** during development (`npm start`).  
+- To deploy, we need a **production-ready bundle** that browsers can execute.  
+
+---
+
+### **How to Build a React App for Deployment**  
+1. **Stop the Development Server**  
+   ```sh
+   Ctrl + C  # Stops `npm start`
+   ```
+
+2. **Run the Build Command**  
+   ```sh
+   npm run build
+   ```
+   - This generates a **highly optimized production build**.  
+   - It **transforms JSX** into regular JavaScript.  
+   - It **minifies** and **compresses** code to improve performance.  
+   - The output is stored in a **`build/` folder**.  
+
+---
+
+### **What Happens in the Build Process?**  
+- **Code Bundling**:  
+  - All JavaScript files are merged into fewer files for efficiency.  
+  - Lazy-loaded components remain **separate chunks** (loaded when needed).  
+
+- **Code Minification & Optimization**:  
+  - Removes unnecessary code, comments, and whitespace.  
+  - Shortens variable names to reduce file size.  
+  - Ensures **faster loading times** for users.  
+
+- **Output Location: `build/` Folder**  
+  - This folder contains **everything needed** for deployment.  
+  - Inside `static/`, the app’s JavaScript, CSS, and assets are optimized.  
+
+---
